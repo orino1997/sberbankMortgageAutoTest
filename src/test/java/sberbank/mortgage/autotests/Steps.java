@@ -3,8 +3,8 @@ package sberbank.mortgage.autotests;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Когда;
+import cucumber.api.java.ru.Тогда;
 import org.junit.Assert;
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -14,11 +14,22 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import sberbankMortgage.MortgagePage;
 import sberbankMortgage.SberbankMainPage;
 
-public class Steps extends BaseTest {
+import java.util.HashMap;
+import java.util.Map;
 
+public class Steps extends BaseTest {
+    private SberbankMainPage main;
+    private WebDriverWait wait;
+    private Map<String, Integer> submenuNameToIndex;
+    private MortgagePage mortgagePage;
     @Before
     public void init() {
         initialize();
+        wait = new WebDriverWait(driver,8);
+        main = new SberbankMainPage(driver);
+        submenuNameToIndex = new HashMap<String, Integer>();
+        submenuNameToIndex.put("Ипотека", 1);
+        mortgagePage = new MortgagePage(driver);
     }
 
     @After
@@ -28,104 +39,100 @@ public class Steps extends BaseTest {
 
     @Когда("^перейти на страницу \"(.+)\"$")
     public void openUrl(String url) {
-        System.out.println(url);
+        driver.navigate().to(url);
     }
 
-    @Test
-    public void checkSberMortgage() {
-        WebDriverWait wait = new WebDriverWait(driver,10);
-        // 1перейти на сайт сбера
-        driver.navigate().to(URL);
-
-        //2.1 В верхнем меню "навестись" на Ипотека
-        SberbankMainPage main = new SberbankMainPage(driver);
-        String mortgage = main.getMenuElementXpath("Ипотека");
+    @Когда("^В верхнем меню навести на \"(.+)\"$")
+    public void pointToTopMenuItem(String topMenuItem) {
+        String mortgage = main.getMenuElementXpath(topMenuItem);
         new Actions(driver).
                 moveToElement(driver.findElement(By.xpath(mortgage))).perform();
-
-        //2.2 дождаться открытия выпадающего меню
-        String subMenuPanel = main.getSubMenuPanel(1);
+        String subMenuPanel = main.getSubMenuPanel(submenuNameToIndex.get(topMenuItem));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(subMenuPanel)));
+    }
 
-        //2.3 выбрать "Ипотека на готовое жилье"
-        String subMenu = main.getSubMenuCategoryXpath("Ипотека на готовое жильё");
+    @Когда("^В открывшемся меню выбрать \"(.+)\"$")
+    public void openSubMenuCategory(String subMenuCategory) {
+        String subMenu = main.getSubMenuCategoryXpath(subMenuCategory);
         new Actions(driver).
                 moveToElement(driver.findElement(By.xpath(subMenu))).perform();
         driver.findElement(By.xpath(subMenu)).click();
+    }
 
-        //скролл
-        MortgagePage mortgagePage = new MortgagePage(driver);
+    @Когда("^Заполнить поле \"Стоимость недвижимости\" \"(.+)\" ₽$")
+    public void fillGapEstateCost(String cost) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", mortgagePage.countMortgageTitle);
-
-        //Заполнить поля
-
-        //Стоимость недвижимости 5 180 000 ₽
         driver.switchTo().frame(mortgagePage.iframe);
+        String monthlyPaymentBeforeChange = mortgagePage.monthlyPayment.getText();
         driver.findElement(By.xpath("//label[@for='estateCost']")).click();
         mortgagePage.realEstateCost.click();
         mortgagePage.realEstateCost.clear();
-        mortgagePage.realEstateCost.sendKeys("5180000");
-        new Actions(driver)
-                .sendKeys(Keys.ESCAPE)
-                .perform();
+        mortgagePage.realEstateCost.sendKeys(cost);
+        wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(mortgagePage.monthlyPayment, monthlyPaymentBeforeChange)));
+    }
 
-        //Первоначальный взнос 3 058 000 ₽
+    @Когда("^Заполнить поле \"Первоначальный взнос\" \"(.+)\" ₽$")
+    public void fillGapFirstPayment(String cost) {
+        String monthlyPaymentBeforeChange = mortgagePage.monthlyPayment.getText();
         mortgagePage.firstFee.click();
         mortgagePage.firstFee.clear();
-        mortgagePage.firstFee.sendKeys("3058000");
-        new Actions(driver)
-                .sendKeys(Keys.ESCAPE)
-                .perform();
+        mortgagePage.firstFee.sendKeys(cost);
+        wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(mortgagePage.monthlyPayment, monthlyPaymentBeforeChange)));
+    }
 
+    @Когда("^Заполнить поле \"Срок кредита\" \"(.+)\" лет$")
+    public void fillGapTerm (String term) {
+        String monthlyPaymentBeforeChange = mortgagePage.monthlyPayment.getText();
         mortgagePage.period.click();
         mortgagePage.period.clear();
-        mortgagePage.period.sendKeys("30");
-        new Actions(driver)
-                .sendKeys(Keys.ESCAPE)
-                .perform();
+        mortgagePage.period.sendKeys(term);
+        wait.until(ExpectedConditions.not(ExpectedConditions
+                .textToBePresentInElement(mortgagePage.monthlyPayment, monthlyPaymentBeforeChange)));
+    }
 
-        //Снять галочку - есть зарплатная карта сбербанка
+    @Когда("^Снять галочку - \"Есть зарплатная карта сбербанка\"$")
+    public void offSwitcherSberCard() {
+        String monthlyPaymentBeforeChange = mortgagePage.monthlyPayment.getText();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", mortgagePage.titleForScroll);
         new Actions(driver)
                 .sendKeys(Keys.ESCAPE)
                 .perform();
         wait.until(ExpectedConditions.elementSelectionStateToBe(mortgagePage.sberCardOwningInput, true));
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         mortgagePage.sberCardOwning.click();
+        wait.until(ExpectedConditions.not(ExpectedConditions
+                .textToBePresentInElement(mortgagePage.monthlyPayment, monthlyPaymentBeforeChange)));
+    }
 
-        //дождаться появления "есть возможность подтвердить доход справкой"
+    @Тогда("^Дождаться появления \"Есть возможность подтвердить доход справкой\"")
+    public void waitTillHasAbilityToValidateIncome() {
         wait.until(ExpectedConditions.visibilityOf(mortgagePage.abilityToValidateIncome));
-        //поставить галочку "молодая семья"
+    }
+
+    @Когда("^Поставить галочку \"Молодая семья\"")
+    public void onSwitcherYoungFamily() {
         ((JavascriptExecutor) driver)
                 .executeScript("arguments[0].scrollIntoView(true);", mortgagePage.abilityToValidateIncome);
         mortgagePage.youngFamily.click();
-
-        //Проверить значение полей
-        //Сумма кредита
-        //2 122 000 ₽
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    }
+    @Тогда("^Проверить, что значение поля \"Сумма кредита\" равно \"(.+)\" ₽$")
+    public void assertSumOfMortgage(int sum) {
         ((JavascriptExecutor) driver)
                 .executeScript("arguments[0].scrollIntoView(true);", mortgagePage.mortgageSum);
-        Assert.assertEquals(2122000, mortgagePage.getSumAsInt(mortgagePage.mortgageSum));
-        //Ежемесячный платеж
-        //17 535 ₽
-        Assert.assertEquals(17535, mortgagePage.getSumAsInt(mortgagePage.monthlyPayment));
+        Assert.assertEquals(sum, mortgagePage.getSumAsInt(mortgagePage.mortgageSum));
+    }
 
-        //Необходимый доход
-        //29224 ₽
-        Assert.assertEquals(29224, mortgagePage.getSumAsInt(mortgagePage.necessaryIncome));
+    @Тогда("^Проверить, что значение поля \"Ежемесячный платеж\" равно \"(.+)\" ₽$")
+    public void assertSumOfMonthlyPayment(int monthlyPayment) {
+        Assert.assertEquals(monthlyPayment, mortgagePage.getSumAsInt(mortgagePage.monthlyPayment));
+    }
 
-        //Процентная ставка
-        //11% - тут ошибка (специально)
-        Assert.assertTrue(11.0 == mortgagePage.getPerCentAsDouble(mortgagePage.interestRate));
+    @Тогда("^Проверить, что значение поля \"Необходимый доход\" равно \"(.+)\" ₽$")
+    public void assertNeededIncome(int neededIncome) {
+        Assert.assertEquals(neededIncome, mortgagePage.getSumAsInt(mortgagePage.necessaryIncome));
+    }
+
+    @Тогда("^Проверить, что значение поля \"Процентная ставка\" равно \"(.+)\" %$")
+    public void assertPercentRate(double rate) {
+        Assert.assertEquals(rate, mortgagePage.getPerCentAsDouble(mortgagePage.interestRate));
     }
 }
