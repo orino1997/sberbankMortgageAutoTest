@@ -1,4 +1,4 @@
-package sberbank.mortgage.autotests;
+package sberbankMortgage;
 
 import java.io.File;
 import java.io.FileInputStream;

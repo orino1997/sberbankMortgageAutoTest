@@ -1,9 +1,8 @@
-package sberbank.mortgage.autotests;
+package sberbankMortgage;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +10,9 @@ public class BaseTest {
     protected static WebDriver driver;
     protected static String URL;
     public static Properties properties = TestProperties.getInstance().getProperties();
+    public static WebDriver getDriver() {
+        return driver;
+    }
 
     public void initialize() {
         String browser = properties.getProperty("browser");

@@ -11,6 +11,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import sberbankMortgage.BaseTest;
 import sberbankMortgage.MortgagePage;
 import sberbankMortgage.SberbankMainPage;
 
@@ -22,6 +23,7 @@ public class Steps extends BaseTest {
     private WebDriverWait wait;
     private Map<String, Integer> submenuNameToIndex;
     private MortgagePage mortgagePage;
+
     @Before
     public void init() {
         initialize();
