@@ -115,24 +115,24 @@ public class Steps extends BaseTest {
         mortgagePage.youngFamily.click();
     }
     @Тогда("^Проверить, что значение поля \"Сумма кредита\" равно \"(.+)\" ₽$")
-    public void assertSumOfMortgage(int sum) {
+    public void assertSumOfMortgage(String sum) {
         ((JavascriptExecutor) driver)
                 .executeScript("arguments[0].scrollIntoView(true);", mortgagePage.mortgageSum);
-        Assert.assertEquals(sum, mortgagePage.getSumAsInt(mortgagePage.mortgageSum));
+        Assert.assertEquals(Integer.parseInt(sum), mortgagePage.getSumAsInt(mortgagePage.mortgageSum));
     }
 
     @Тогда("^Проверить, что значение поля \"Ежемесячный платеж\" равно \"(.+)\" ₽$")
-    public void assertSumOfMonthlyPayment(int monthlyPayment) {
-        Assert.assertEquals(monthlyPayment, mortgagePage.getSumAsInt(mortgagePage.monthlyPayment));
+    public void assertSumOfMonthlyPayment(String monthlyPayment) {
+        Assert.assertEquals(Integer.parseInt(monthlyPayment), mortgagePage.getSumAsInt(mortgagePage.monthlyPayment));
     }
 
     @Тогда("^Проверить, что значение поля \"Необходимый доход\" равно \"(.+)\" ₽$")
-    public void assertNeededIncome(int neededIncome) {
-        Assert.assertEquals(neededIncome, mortgagePage.getSumAsInt(mortgagePage.necessaryIncome));
+    public void assertNeededIncome(String neededIncome) {
+        Assert.assertEquals(Integer.parseInt(neededIncome), mortgagePage.getSumAsInt(mortgagePage.necessaryIncome));
     }
 
     @Тогда("^Проверить, что значение поля \"Процентная ставка\" равно \"(.+)\" %$")
-    public void assertPercentRate(double rate) {
-        Assert.assertEquals(rate, mortgagePage.getPerCentAsDouble(mortgagePage.interestRate));
+    public void assertPercentRate(String rate) {
+        Assert.assertEquals(Double.parseDouble(rate), mortgagePage.getPerCentAsDouble(mortgagePage.interestRate));
     }
 }
