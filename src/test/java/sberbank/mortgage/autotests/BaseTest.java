@@ -1,7 +1,5 @@
 package sberbank.mortgage.autotests;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,8 +15,7 @@ public class BaseTest {
     protected static String URL;
     public static Properties properties = TestProperties.getInstance().getProperties();
 
-    @BeforeClass
-    public static void initialize() {
+    public void initialize() {
         String browser = properties.getProperty("browser");
         if ("chrome".equals(browser)) {
             System.setProperty("webdriver.chrome.driver", properties.getProperty("webdriver.chrome.driver"));
@@ -55,8 +52,7 @@ public class BaseTest {
 
     }
 
-    @AfterClass
-    public static void tearDown() {
+    public void tearDown() {
         driver.close();
         driver.quit();
     }

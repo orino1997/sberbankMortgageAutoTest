@@ -7,9 +7,8 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = {"src/test/resources/sberbankMortgageTest.feature"},
-        glue = {"src/test/sberbank/mortgage/autotests"}
+        glue = {"sberbank.mortgage.autotests"}
 )
 public class CucumberRunner {
-    public CucumberRunner() {
-    }
+
 }

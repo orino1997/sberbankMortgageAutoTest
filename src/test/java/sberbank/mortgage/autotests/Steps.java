@@ -1,5 +1,8 @@
 package sberbank.mortgage.autotests;
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.ru.Когда;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -11,7 +14,23 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import sberbankMortgage.MortgagePage;
 import sberbankMortgage.SberbankMainPage;
 
-public class Steps extends BaseTest{
+public class Steps extends BaseTest {
+
+    @Before
+    public void init() {
+        initialize();
+    }
+
+    @After
+    public void tearDown() {
+        super.tearDown();
+    }
+
+    @Когда("^перейти на страницу \"(.+)\"$")
+    public void openUrl(String url) {
+        System.out.println(url);
+    }
+
     @Test
     public void checkSberMortgage() {
         WebDriverWait wait = new WebDriverWait(driver,10);
