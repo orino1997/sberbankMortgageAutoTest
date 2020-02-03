@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = {"src/test/resources/sberbankMortgageTest.feature"},
         glue = {"sberbank.mortgage.autotests"},
-        plugin = {"io.qameta.allure.cucumber3jvm.AllureCucumber3Jvm", "sberbankMortgage.AllureReporter"}
+        plugin = {"io.qameta.allure.cucumber3jvm.AllureCucumber3Jvm"}
 )
 public class CucumberRunner {
 

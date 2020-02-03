@@ -1,8 +1,15 @@
 package sberbankMortgage;
 
+import cucumber.api.Scenario;
+import io.qameta.allure.Allure;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +44,13 @@ public class BaseTest {
         driver.manage().window().maximize();
     }
 
-    public void tearDown() {
+    public void tearDown(Scenario scenario) {
+        if(scenario.isFailed()) {
+            byte[] screenShot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            Allure.getLifecycle().addAttachment(LocalDateTime.now()
+                            .format(DateTimeFormatter.ofPattern("dd-MMM-yy_hh:mm:ss")), "image/png",
+                    "png", screenShot);
+        }
         driver.close();
         driver.quit();
     }

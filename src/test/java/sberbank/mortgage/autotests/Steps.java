@@ -1,5 +1,6 @@
 package sberbank.mortgage.autotests;
 
+import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Когда;
@@ -35,8 +36,8 @@ public class Steps extends BaseTest {
     }
 
     @After
-    public void tearDown() {
-        super.tearDown();
+    public void tearDown(Scenario scenario) {
+        super.tearDown(scenario);
     }
 
     @Когда("^перейти на страницу \"(.+)\"$")
