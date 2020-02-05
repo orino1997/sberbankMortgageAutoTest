@@ -16,6 +16,7 @@ import sberbankMortgage.BaseTest;
 import sberbankMortgage.MortgagePage;
 import sberbankMortgage.SberbankMainPage;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,11 @@ public class Steps extends BaseTest {
 
     @Before
     public void init() {
-        initialize();
+        try {
+            initialize();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         wait = new WebDriverWait(driver,8);
         main = new SberbankMainPage(driver);
         submenuNameToIndex = new HashMap<String, Integer>();
