@@ -23,7 +23,7 @@ public class BaseTest {
     public static Properties properties = TestProperties.getInstance().getProperties();
 
     public void initialize() throws MalformedURLException {
-        String browser = properties.getProperty("browser");
+        String browser = System.getProperty("browser");
         String isRemote = properties.getProperty("isRemote");
         if (isRemote.equals("true")) {
             DesiredCapabilities capabilities = new DesiredCapabilities();
