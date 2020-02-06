@@ -92,27 +92,26 @@
         </plugins>
     </build>
     <profiles>
-             <profile>
-                 <id>chrome</id>
-                 <properties>
-                     <browser>chrome</browser>
-                 </properties>
-                 <activation>
-                     <activeByDefault>true</activeByDefault>
-                 </activation>
-             </profile>
-             <profile>
-                 <id>firefox</id>
-                 <properties>
-                     <browser>firefox</browser>
-                 </properties>
-             </profile>
-              </profile>
-             <profile>
-                 <id>ie</id>
-                 <properties>
-                     <browser>ie</browser>
-                 </properties>
-             </profile>
-    </profiles>
+        <profile>
+            <id>chrome</id>
+            <properties>
+                <browser>chrome</browser>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>firefox</id>
+            <properties>
+                <browser>firefox</browser>
+            </properties>
+        </profile>
+        <profile>
+        <id>ie</id>
+        <properties>
+            <browser>ie</browser>
+        </properties>
+    </profile>
+</profiles>
 </project>
